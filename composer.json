@@ -7,7 +7,7 @@
             "email": "edwinmugendi@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=4.0.2"
     },
