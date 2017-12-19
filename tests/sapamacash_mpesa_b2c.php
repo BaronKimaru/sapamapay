@@ -8,7 +8,7 @@ $endpoint = 'http://sapamacash.com/api/mpesa_b2c';
 //Data to send a query string
 $data = array(
     'format' => 'json',
-    'location_id' => 1,
+    'location_id' => 67,
     'phone' => '254722906835',
     'amount' => '5',
     'description' => '',

@@ -6,13 +6,15 @@ use Edwinmugendi\Sapamapay\MpesaApi;
 
 $mpesa_api = new MpesaApi();
 $configs = array(
-    'AccessToken' => 'ACCESSTOKEN',
+    'AccessToken' => 'sfdyxZrLwYLPEcVNQ1ZWNm6wCxfc',
     'Environment' => 'sandbox',
     'Content-Type' => 'application/json',
     'Verbose' => '',
 );
 
+$api = 'generate_token';
 $api = 'c2b_simulate';
+
 
 if ($api == 'stk_push') {
     $parameters = array(
@@ -108,7 +110,7 @@ if ($api == 'stk_push') {
         'ResponseType' => 'Completed',
         'ShortCode' => '603013',
     );
-} else if ($api == 'c2b_simulate') {
+} else if ($api == 'c2b_simulate') {//This API sends 
 
     $parameters = array(
         'CommandID' => 'CustomerPayBillOnline',
