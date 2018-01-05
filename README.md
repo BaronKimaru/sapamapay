@@ -18,9 +18,9 @@ This library is an API wrapper to the following [Safaricom MPESA API's](https://
 - [Reversal](https://developer.safaricom.co.ke/reversal/apis/post/request)
 - [Generate Token](https://developer.safaricom.co.ke/oauth/apis)
 
-##Installation
+## Installation
 
-###Requirements
+### Requirements
 
 PHP >=4.0.2
 
@@ -40,7 +40,7 @@ Without composer. Download the source code and `require_once` the `autoload.php`
 ```
 require_once __DIR__ . '/../vendor/autoload.php';
 ```
-##Testing
+## Testing
 Update the `$api` variable to the API you want to run. 
 
 ```php
@@ -177,11 +177,11 @@ echo '<p>Response var_dump:<p>';
 var_dump($response);
 
 ```
-##Authentication
+## Authentication
 First call the `generate_token` to get the access token
 After getting the access token, set it in the `AccessToken` index in the `$configs` to make other calls.
 
-##Configurations
+## Configurations
 The `$configs` parameters has the following indices
 
 - `AccessToken` - The access token. Get the access to ken by running calling the `generate_token' API 
@@ -199,7 +199,7 @@ $configs = array(
 );
 ```
 
-##Response
+## Response
 The response has the following indices
 
 - `Environment` - live or sandbox
@@ -251,6 +251,154 @@ array (size=10)
           'type' => string 'Alpha-Numeric' (length=13)
           'sample_value' => string 'O22vJy6rnN2nRAnOPqZ8dkyGxmXG' (length=28)
 ```
+## Saving C2B response in the 
+The URL that you registered you need to write code to capture the json data that is posted to that URL.
 
-##Help
-For API integration assistance, bugs or assistance, kindly reach me on <a href="mailto:edwinmugendi@gmail.com">edwinmugendi@gmail.com</a>
+MPESA will send 2 requests:
+1. Validation - This step is optional. It's used to validate that the transaction is valid. Eg, if you can validate that the account number that the customer entered exists. 
+
+MPESA will post the json below. You can get it going to [this link](https://developer.safaricom.co.ke/docs?json#c2b-api) and then click on the "Json Response" tab on the right.
+```json
+// Validation Response
+{
+  "TransactionType":"",
+  "TransID":"LGR219G3EY",
+  "TransTime":"20170727104247",
+  "TransAmount":"10.00",
+  "BusinessShortCode":"600134",
+  "BillRefNumber":"xyz",
+  "InvoiceNumber":"",
+  "OrgAccountBalance":"",
+  "ThirdPartyTransID":"",
+  "MSISDN":"254708374149",
+  "FirstName":"John",
+  "MiddleName":"Doe",
+  "LastName":""
+}
+```
+
+Below is a sample PHP code for the validation step that just returns what's required. Sorry if you are not using PHP, but you can re-write it in your own language
+
+```php
+ /**
+     * S# postMpesaDarajaC2BValidate() function
+     * 
+     * @author Edwin Mugendi <edwinmugendi@gmail.com>
+     * 
+     * Mpesa Daraja C2B Validate
+     * 
+     */
+    public function postMpesaDarajaC2BValidate() {
+        return $array = array(
+            'ResultCode' => '0',
+            'ResultDesc' => 'Service processing successful',
+        );
+    }
+
+//E# postMpesaDarajaC2BValidate() function
+
+```
+2. Confirmation - If you return "ResultCode" == 0, MPESA will complete the transaction send you a json of the transaction object to the URL you registered. 
+
+MPESA will post the json below. You can get it going to [this link](https://developer.safaricom.co.ke/docs?json#c2b-api) and then click on the "Json Response" tab on the right.
+```json
+//Confirmation Respose
+{
+  "TransactionType":"",
+  "TransID":"LGR219G3EY",
+  "TransTime":"20170727104247",
+  "TransAmount":"10.00",
+  "BusinessShortCode":"600134",
+  "BillRefNumber":"xyz",
+  "InvoiceNumber":"",
+  "OrgAccountBalance":"49197.00",
+  "ThirdPartyTransID":"1234567890",
+  "MSISDN":"254708374149",
+  "FirstName":"John",
+  "MiddleName":"",
+  "LastName":""
+}
+```
+
+Below is a sample PHP code for the confirmation step that saves the data to the database. Sorry if you are not using PHP, but you can re-write it in your own language
+
+The code is written in Laravel 4 but has the raw php equivalent code to get the json and save response in the database. (NB: The RAW php has not been tested but should work :) )
+
+```php
+ /**
+     * S# postMpesaDarajaC2BConfirm() function
+     * 
+     * @author Edwin Mugendi <edwinmugendi@gmail.com>
+     * 
+     * Mpesa Daraja C2B confirm
+     * 
+     */
+    public function postMpesaDarajaC2BConfirm() {
+        //Get Input data Laravel 4.2
+        $input = \Input::get();
+
+        //If you are using raw php you can
+        //$json_payload = file_get_contents('php://input');
+        //$input = json_decode($json_payload,TRUE);
+
+        $name = '';
+        if ($input['FirstName']) {
+            $name = $input['FirstName'];
+        }//E# if statement
+
+        if ($input['MiddleName']) {
+            $name .= ' ' . $input['MiddleName'];
+        }//E# if statement
+
+        if ($input['LastName']) {
+            $name .= ' ' . $input['LastName'];
+        }//E# if statement
+        //Initiate transaction array
+        $transaction_array = array(
+            'trans_type' => $input['TransactionType'],
+            'trans_id' => $input['TransID'],
+            'trans_time' => Carbon::createFromFormat('YmdHis', $input['TransTime']),
+            'trans_amount' => $input['TransAmount'],
+            'short_code' => $input['BusinessShortCode'],
+            'org_account_balance' => $input['OrgAccountBalance'],
+            'phone' => $input['MSISDN'],
+            'bill_ref_number' => $input['BillRefNumber'],
+            'invoice_number' => $input['InvoiceNumber'],
+            'first_name' => $input['FirstName'],
+            'middle_name' => $input['MiddleName'],
+            'last_name' => $input['LastName'],
+            'name' => $name,
+        );
+
+        //Laravel 4.2
+        $transaction_model = Transaction::create($transaction_array);
+
+        /* RAW PHP
+          $link = mysql_connect($db_host, $db_name, $db_pass);
+
+          mysql_select_db($db_name, $link);
+
+          if (!$link) {
+          die('Could not connect: ' . mysql_error());
+          }
+          $transaction_array = array();
+
+          $sql = "INSERT INTO TRANSACTION (trans_type, trans_id,
+          trans_amount,trans_time,trans_date,phone,first_name, middle_name,last_name, bill_ref_number,short_code)
+          VALUES (" . $transaction_array['trans_type'] . ", " . $transaction_array['trans_id'] . ", " . $transaction_array['trans_amount'] . ", " . $transaction_array['trans_time'] . ", " . $transaction_array['trans_date'] . ", " . $transaction_array['trans_phone'] . ", " . $transaction_array['trans_first_name'] . ", " . $transaction_array['trans_middle_name'] . ", " . $transaction_array['trans_last_name'] . ", " . $transaction_array['trans_bill_ref_number'] . ", " . $transaction_array['trans_short_code'] . "')";
+
+          if (!mysql_query($sql, $link)) {
+          die('Error: ' . mysql_error());
+          }
+
+          // Close connection
+          mysql_close($link);
+         */
+        return 'Completed';
+    }
+
+//E# postMpesaDarajaC2BConfirm() function
+```
+
+## Help
+For API integration assistance, bugs or assistance, kindly reach me on <a href="mailto:edwinmugendi@gmail.com">edwinmugendi@gmail.com</a> or +254722906835
