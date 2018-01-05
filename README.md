@@ -402,6 +402,6 @@ The code is written in Laravel 4 but has the raw php equivalent code to get the 
 ```
 
 ## Help
-For MPESA API as a Service check out [SapamaCash.com](http://sapamacash.com/docs)
+For MPESA API as a Service and access all the functions/API's above as a service, please check out [SapamaCash.com](http://sapamacash.com/docs)
 
 For API integration assistance, bugs or assistance, kindly reach me on <a href="mailto:edwinmugendi@gmail.com">edwinmugendi@gmail.com</a> or +254722906835
