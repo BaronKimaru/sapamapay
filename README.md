@@ -251,7 +251,7 @@ array (size=10)
           'type' => string 'Alpha-Numeric' (length=13)
           'sample_value' => string 'O22vJy6rnN2nRAnOPqZ8dkyGxmXG' (length=28)
 ```
-## Saving C2B response in the 
+## C2B Processes
 The URL that you registered you need to write code to capture the json data that is posted to that URL.
 
 MPESA will send 2 requests:
@@ -279,6 +279,7 @@ MPESA will post the json below. You can get it going to [this link](https://deve
 
 Below is a sample PHP code for the validation step that just returns what's required. Sorry if you are not using PHP, but you can re-write it in your own language
 
+You need to return "ResultCode"=>0 meaning your accept the transaction and "ResultCode"=>1, if you don't accept the transaction and the transaction will fail
 ```php
  /**
      * S# postMpesaDarajaC2BValidate() function
@@ -298,7 +299,7 @@ Below is a sample PHP code for the validation step that just returns what's requ
 //E# postMpesaDarajaC2BValidate() function
 
 ```
-2. Confirmation - If you return "ResultCode" == 0, MPESA will complete the transaction send you a json of the transaction object to the URL you registered. 
+2. Confirmation - If you return "ResultCode" == 0 in the above step, MPESA will complete the transaction send you a json of the transaction object to the URL you registered. 
 
 MPESA will post the json below. You can get it going to [this link](https://developer.safaricom.co.ke/docs?json#c2b-api) and then click on the "Json Response" tab on the right.
 ```json
