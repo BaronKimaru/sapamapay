@@ -251,7 +251,7 @@ array (size=10)
           'type' => string 'Alpha-Numeric' (length=13)
           'sample_value' => string 'O22vJy6rnN2nRAnOPqZ8dkyGxmXG' (length=28)
 ```
-## C2B Processes
+## C2B Validation and Confirmation
 The URL that you registered you need to write code to capture the json data that is posted to that URL.
 
 MPESA will send 2 requests:
