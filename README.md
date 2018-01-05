@@ -251,8 +251,11 @@ array (size=10)
           'type' => string 'Alpha-Numeric' (length=13)
           'sample_value' => string 'O22vJy6rnN2nRAnOPqZ8dkyGxmXG' (length=28)
 ```
+
 ## C2B Validation and Confirmation
 The URL that you registered you need to write code to capture the json data that is posted to that URL.
+
+The URL need be ssl or https. You can use [LetsEncrypt] https://letsencrypt.org/ to setup https 
 
 MPESA will send 2 requests:
 1. Validation - This step is optional. It's used to validate that the transaction is valid. Eg, if you can validate that the account number that the customer entered exists. 
@@ -402,6 +405,8 @@ The code is written in Laravel 4 but has the raw php equivalent code to get the 
 ```
 
 ## Help
+This blog post shares our companies experience in [integrating to MPESA API] http://sapamaerp.com/blog/guide-integrating-new-mpesa-api
+ 
 For MPESA API as a Service and access all the functions/API's above as a service, please check out [SapamaCash.com](http://sapamacash.com/docs)
 
 For API integration assistance, bugs or assistance, kindly reach me on <a href="mailto:edwinmugendi@gmail.com">edwinmugendi@gmail.com</a> or +254722906835
