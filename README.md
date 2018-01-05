@@ -335,10 +335,10 @@ The code is written in Laravel 4 but has the raw php equivalent code to get the 
      * 
      */
     public function postMpesaDarajaC2BConfirm() {
-        //Get Input data Laravel 4.2
+        //Laravel 4.2
         $input = \Input::get();
 
-        //If you are using raw php you can
+        //RAW PHP - Untested :(
         //$json_payload = file_get_contents('php://input');
         //$input = json_decode($json_payload,TRUE);
 
@@ -374,7 +374,7 @@ The code is written in Laravel 4 but has the raw php equivalent code to get the 
         //Laravel 4.2
         $transaction_model = Transaction::create($transaction_array);
 
-        /* RAW PHP
+        /* RAW PHP - Untested :(
           $link = mysql_connect($db_host, $db_name, $db_pass);
 
           mysql_select_db($db_name, $link);
