@@ -3,18 +3,34 @@
 //Set the api_key, api_secret and endpoint as configs in the system that can be setup during configuration
 $api_key = 'key';
 $api_secret = 'secret';
-$endpoint = 'http://sapamacash.com/api/update_transaction';
+$endpoint = 'http://localhost/sapamacash/public/api/checkout';
 
 //Data to send a query string
 $data = array(
+    'flow' => 'redirect',
+    'environment' => 'sandbox',
+    'simulate' => 'success',
+    'first_name' => 'Edwin',
+    'last_name' => 'Mugendi',
+    'email' => 'edwin@sapamatech.com',
+    'phone' => '254722906835',
+    'address' => 'Address',
+    'city' => 'City',
+    'province' => 'Province',
+    'postal_code' => '00200',
+    'amount' => '200',
+    'currency' => 'KES',
+    'reference_number' => 'REFERENCE NUMBER',
+    'callback_url' => 'http://sapamacash.com',
+    'picture_url' => 'http://sapamacash.com',
+    'item_id' => '1',
     'format' => 'json',
-    'id' => 1,
-    'ipned' => 'success',
     'api_key' => $api_key,
     'api_secret' => $api_secret,
 );
 //Sort by keys in ascending order
 ksort($data);
+var_dump($data);
 
 //Implode the string
 $string_to_hash = implode($data, '.');
@@ -54,21 +70,17 @@ curl_setopt($ch, CURLOPT_POST, count($data));
 curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 
 $result = curl_exec($ch);
-echo 'Result in JSON<p>' . $result . '<p>';
 
+
+echo 'Result in JSON<p>' . $result . '<p>';
+    
 $decoded_data = json_decode($result, true);
 echo 'Decoded array<p>';
 
 var_dump($decoded_data);
 
-if ($decoded_data['httpStatusCode'] == 200 && array_key_exists('data', $decoded_data['data'])) {
-    echo '<p>Success<p>';
-    $index = 0;
-    foreach ($decoded_data['data']['data'] as $single_transaction) {
-        echo "<p>Transaction " . $index . '<p>';
-        var_dump($single_transaction);
-        $index++;
-    }//E# foreach statement
+if ($decoded_data['httpStatusCode'] == 200) {
+    
 } else {
     echo "<p>HTTP Status Code: " . $decoded_data['httpStatusCode'] . '<p>';
     echo "System Code: " . $decoded_data['systemCode'] . '<p>';

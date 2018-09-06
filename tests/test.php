@@ -5,6 +5,7 @@ require_once __DIR__ . '/../vendor/autoload.php'; // Autoload files using Compos
 use Edwinmugendi\Sapamapay\MpesaApi;
 
 $mpesa_api = new MpesaApi();
+
 $configs = array(
     'AccessToken' => 'sfdyxZrLwYLPEcVNQ1ZWNm6wCxfc',
     'Environment' => 'sandbox',
@@ -127,6 +128,7 @@ if ($api == 'stk_push') {
 }//E# if statement
 
 $response = $mpesa_api->call($api, $configs, $parameters);
+
 echo 'JSON response: <p>';
 echo json_encode($response);
 echo '<p>Response var_dump:<p>';
